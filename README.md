@@ -1,4 +1,6 @@
-# Anomaly Detection
+# Anomaly Detection Quick Demo
+
+![Architecture](https://github.com/jomit/anomaly-detection/blob/master/architecture.png)
 
 ### High Level Components
 - Simulated PLC
