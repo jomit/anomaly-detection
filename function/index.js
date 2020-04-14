@@ -10,9 +10,9 @@ module.exports = function (context, IoTHubMessages) {
     let anomalyDetectorClient = new AnomalyDetector.AnomalyDetectorClient(credentials, endpoint);
     IoTHubMessages.forEach((message) => {
         var msg = JSON.parse(message);
-        let anomalyData = { series: msg, granularity: 'minutely', maxAnomalyRatio:0.25,sensitivity:90 };
-        detectAnomaly(context, anomalyData, anomalyDetectorClient);
-        context.log(msg);
+        let anomalyBody = { series: msg, granularity: 'minutely', maxAnomalyRatio:0.25,sensitivity:90 };
+        detectAnomaly(context, anomalyBody, anomalyDetectorClient);
+        //context.log(msg);
     });
 };
 
@@ -20,10 +20,11 @@ async function detectAnomaly(context, body, detectionClient) {
     //context.log(body)
     await detectionClient.lastDetect(body)
         .then((response) => {
-            context.log(response)
             if (response.isAnomaly) {
-                context.log("The latest point, [" + response.expectedValue + "], is detected as an anomaly. Sending Email...")
-                sendEmail();
+                context.log(response)
+                var lastDataPoint = body.series[body.series.length-1]
+                context.log("Anomaly detected for " + JSON.stringify(lastDataPoint)  + "sending email...")
+                sendEmail(lastDataPoint);
             } else {
                 //context.log("The latest point, [" + response.expectedValue + "], is NOT detected as an anomaly.")
             }
@@ -33,10 +34,11 @@ async function detectAnomaly(context, body, detectionClient) {
         });
 }
 
-function sendEmail() {
+function sendEmail(responseText) {
+    var emailText = encodeURIComponent(JSON.stringify(responseText));
     https.get({
         host: 'prod-107.westus.logic.azure.com',
-        path: '/workflows/...',
+        path: '/workflows/...' + '&anomalydata=' + emailText,
         method: 'POST',
         port: '443',
         headers: {

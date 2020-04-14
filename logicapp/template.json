@@ -1,0 +1,73 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Initialize_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "anomalydata",
+                            "type": "string",
+                            "value": "@{triggerOutputs()['queries']['anomalydata']}"
+                        }
+                    ]
+                },
+                "runAfter": {},
+                "type": "InitializeVariable"
+            },
+            "Send_email_(V4)": {
+                "inputs": {
+                    "body": {
+                        "from": "anomaldetector@azure.com",
+                        "ishtml": true,
+                        "subject": "Anomaly Detected !!",
+                        "text": "<p>Anomaly details below:<br>\n<br>\n@{variables('anomalydata')}</p>",
+                        "to": "..."
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['sendgrid']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/v4/mail/send"
+                },
+                "runAfter": {
+                    "Initialize_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "manual": {
+                "inputs": {
+                    "method": "POST",
+                    "schema": {}
+                },
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "sendgrid": {
+                    "connectionId": "/subscriptions/...",
+                    "connectionName": "sendgrid",
+                    "id": "/subscriptions/..."
+                }
+            }
+        }
+    }
+}
