@@ -7,7 +7,6 @@ require('dotenv').config()
 
 let CSV_FILE = './data/alldata.csv'
 
-
 let key = process.env.anomalydetector_key
 let endpoint = process.env.anomalydetector_endpoint
 let credentials = new msRest.ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': key } })
@@ -22,6 +21,7 @@ function readFile() {
         if(!skiprow){
             points.push({ timestamp: new Date(e[0]), value: parseFloat(e[1]) });
             //console.log("Date => " + Date(e[0]) + " , Value => " + parseFloat(e[1]))
+            //console.log("data.push({ timestamp: new Date('" + e[0] + "') , value: " + parseFloat(e[1]) + " });")
         }
         skiprow = !skiprow
     });
@@ -45,7 +45,7 @@ async function batchCall() {
 }
 
 async function lastDetection(){
-    let body = { series: points, granularity: 'minutely' }
+    let body = { series: [], granularity: 'minutely' }
         await anomalyDetectorClient.lastDetect(body)
             .then((response) => {
                 console.log("Latest point anomaly detection:")
