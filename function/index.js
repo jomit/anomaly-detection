@@ -36,9 +36,10 @@ async function detectAnomaly(context, body, detectionClient) {
 
 function sendEmail(responseText) {
     var emailText = encodeURIComponent(JSON.stringify(responseText));
+    var logicAppWorkflowPath = '/workflows/...';
     https.get({
         host: 'prod-107.westus.logic.azure.com',
-        path: '/workflows/...' + '&anomalydata=' + emailText,
+        path: logicAppWorkflowPath + '&anomalydata=' + emailText,
         method: 'POST',
         port: '443',
         headers: {
