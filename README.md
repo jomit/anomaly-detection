@@ -31,20 +31,20 @@
 
 #### Function App
 - Create a NodeJS Function App.
-- Create a new Function with Azure IoT Hub as trigger.
-- Use Console to install following npm packages in `D:\home\site\wwwroot` directory:
+- Create a new Function with IoT Hub as trigger and connect it to the IoT Hub created above.
+- Use the function `Console` to install following npm packages in `D:\home\site\wwwroot` directory:
     - `@azure/cognitiveservices-anomalydetector`
     - `@azure/ms-rest-js`
 - Add following Application Settings:
-    - `anomalydetector_endpoint` | `<Anomaly Detector API key>`
-    - `anomalydetector_key` | `<Anomaly Detector API endpoint>`
+    - Name: `anomalydetector_endpoint` | Value: `<Anomaly Detector API key>`
+    - Name: `anomalydetector_key` | Value: `<Anomaly Detector API endpoint>`
 - Update the index.js file code with `function\index.js`
 - Update the `logicAppWorkflowPath` variable in `sendEmail` method with the logic app workflow path
 
 #### Simulated PLC
 - Clone the repo
 - Install [Nodejs](https://nodejs.org/en/)
-- Goto `simulatedplc` folder in command line
+- Goto `simulated-plc` folder in command line
 - Run `npm install`
 - Create `.env` file and add following variables:
     - `deviceConnectionString='<Your IoT Hub Device Connection String>'`

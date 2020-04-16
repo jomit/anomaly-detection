@@ -1,7 +1,8 @@
 'use strict';
 require('dotenv').config();
 var connectionString = process.env.deviceConnectionString;
-var Mqtt = require('azure-iot-device-mqtt').Mqtt;
+//var Protocol = require('azure-iot-device-mqtt').Mqtt;
+var Protocol = require('azure-iot-device-mqtt').MqttWs;
 var DeviceClient = require('azure-iot-device').Client;
 var Message = require('azure-iot-device').Message;
 const fs = require('fs');
@@ -26,9 +27,9 @@ readFile();
 //points = points.slice(0,8640);
 
 var internval = 5000; //milliseconds
-var client = DeviceClient.fromConnectionString(connectionString, Mqtt);
+var client = DeviceClient.fromConnectionString(connectionString, Protocol);
 console.log('Simulated PLC Started: ');
-var index = 0;
+var index = 700;
 setInterval(function () {
     var msgArray = [];
     for(var i = index; i<(index+30); i++){  //need minimum 12 data points for stream anomaly detection but sending 30 for now
