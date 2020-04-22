@@ -44,5 +44,10 @@
 
 #### Realtime Dashboard Web App (running on Azure using Static website in Azure Storage)
 
-- Coming Soon
+- [Enable Static Website hosting](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website-how-to?tabs=azure-portal) in Azure Storage Account.
+    - Index document name: `index.html`
+- Copy the Primary endpoint.
+- Upload the `real-time-dashboard\webapp\index.html` file into the `$web` container of the Storage Account.
+- Enable `Enable Access-Control-Allow-Credentials` and add Primary endpoint (copied above) in CORS Allowed Origins settings of the Function App.
+- Open the Primary endpoint uri.
 
