@@ -1,0 +1,22 @@
+{
+    "bindings": [
+      {
+        "type": "eventHubTrigger",
+        "name": "IoTHubMessages",
+        "direction": "in",
+        "eventHubName": "samples-workitems",
+        "connection": "demo-hub_events_IOTHUB",
+        "cardinality": "many",
+        "consumerGroup": "$Default",
+        "dataType": "string"
+      },
+      {
+        "type": "signalR",
+        "name": "signalRMessages",
+        "hubName": "chat",
+        "connectionStringSetting": "signalr-service-connection",
+        "direction": "out"
+      }
+    ],
+    "disabled": false
+  }

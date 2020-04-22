@@ -1,6 +1,6 @@
 # Anomaly Detection Quick Demo
 
-![Architecture](https://github.com/jomit/anomaly-detection/blob/master/architecture.png)
+![Architecture](img/architecture.png)
 
 ### High Level Components
 - Simulated PLC
@@ -31,13 +31,13 @@
 
 #### Function App
 - Create a NodeJS Function App.
-- Create a new Function with IoT Hub as trigger and connect it to the IoT Hub created above.
-- Use the function `Console` to install following npm packages in `D:\home\site\wwwroot` directory:
-    - `@azure/cognitiveservices-anomalydetector`
-    - `@azure/ms-rest-js`
 - Add following Application Settings:
     - Name: `anomalydetector_endpoint` | Value: `<Anomaly Detector API key>`
     - Name: `anomalydetector_key` | Value: `<Anomaly Detector API endpoint>`
+- Create a new Function with IoT Hub as trigger and connect it to the IoT Hub created above.
+- Use the function `Console` to install following npm packages in `D:\home\site\wwwroot` directory:
+    - `npm install @azure/cognitiveservices-anomalydetector`
+    - `npm install @azure/ms-rest-js`
 - Update the index.js file code with `function\index.js`
 - Update the `logicAppWorkflowPath` variable in `sendEmail` method with the logic app workflow path
 

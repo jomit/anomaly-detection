@@ -29,7 +29,7 @@ readFile();
 var internval = 5000; //milliseconds
 var client = DeviceClient.fromConnectionString(connectionString, Protocol);
 console.log('Simulated PLC Started: ');
-var index = 700;
+var index = 0;
 setInterval(function () {
     var msgArray = [];
     for(var i = index; i<(index+30); i++){  //need minimum 12 data points for stream anomaly detection but sending 30 for now

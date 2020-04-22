@@ -1,0 +1,166 @@
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@aspnet/signalr@1.0.3/dist/browser/signalr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+    <style>
+        .label {
+            display: inline-block;
+            text-align: right;
+            width: 90px;
+        }
+
+        .value {
+            display: inline-block;
+            text-align: left;
+            width: 60px;
+        }
+
+        .control {
+            width: 200px;
+        }
+        .chart {
+			margin: auto;
+			width: 75%;
+		}
+
+        canvas {
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+    </style>
+</head>
+
+<body>
+    <div class="chart">
+        <canvas id="chartCanvas"></canvas>
+    </div>
+
+    <script>
+        "use strict";
+        var chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        var color = Chart.helpers.color;
+        const apiBaseUrl = "https://<YOUR FUNCTION APP NAME>.azurewebsites.net";
+
+        window.onload = function () {
+            var ctx = document.getElementById('chartCanvas').getContext('2d');
+
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Sensor Value',
+                        backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
+                        borderColor: chartColors.blue,
+                        fill: false,
+                        cubicInterpolationMode: 'monotone',
+                        data: []
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Real time Sensor Graph'
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: 'realtime',
+                            realtime: {
+                                duration: 20000,
+                                ttl: 60000,
+                                delay: 0
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                suggestedMin: -100,
+                                suggestedMax: 100
+                            },
+                            type: 'linear',
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'value'
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
+                    plugins: {
+                        streaming: {
+                            frameRate: 30
+                        }
+                    }
+                }
+            });
+
+            getConnectionInfo().then(info => {
+                // make compatible with old and new SignalRConnectionInfo
+                info.accessToken = info.accessToken || info.accessKey;
+                info.url = info.url || info.endpoint;
+
+                const options = {
+                    accessTokenFactory: () => info.accessToken
+                };
+
+                const connection = new signalR.HubConnectionBuilder()
+                    .withUrl(info.url, options)
+                    .configureLogging(signalR.LogLevel.Information)
+                    .build();
+
+                connection.on('newMessage', newMessage);
+                connection.onclose(() => console.log('disconnected'));
+
+                console.log('connecting...');
+                connection.start()
+                    .then(() => console.log('connected!'))
+                    .catch(console.error);
+
+            }).catch(alert);
+        };
+
+        function getAxiosConfig() {
+            const config = {
+                headers: {}
+            };
+            return config;
+        }
+
+        function getConnectionInfo() {
+            return axios.post(`${apiBaseUrl}/api/negotiate`, null, getAxiosConfig())
+                .then(resp => resp.data);
+        }
+
+        function newMessage(message) {
+            var messageArray = JSON.parse(message);
+            var currentMessage = messageArray; //select first message value for now.
+            myChart.data.datasets[0].data.push({
+                x: currentMessage.timestamp,
+                y: currentMessage.value
+            });
+            myChart.update({
+                preservation: true
+            });
+        }
+    </script>
+</body>
+
+</html>
