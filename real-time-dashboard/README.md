@@ -2,6 +2,8 @@
 
 ![Architecture](../img/rt-architecture.png)
 
+![](../img/rt-dashboard.gif)
+
 ### High Level Deployment Steps
 
 #### IoT Hub
@@ -39,8 +41,6 @@
 - Generate certificate for https `openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem`
 - Start http server locally `http-server -S -C cert.pem`
 - Open [https://localhost:8080](https://localhost:8080)
-
-![](../img/rt-dashboard.gif)
 
 #### Realtime Dashboard Web App (running on Azure using Static website in Azure Storage)
 
