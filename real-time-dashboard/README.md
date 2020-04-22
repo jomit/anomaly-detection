@@ -1,8 +1,8 @@
 # Real time Dashboard using Azure Function and SignalR Service
 
-![Architecture](../img/rt-architecture.png)
-
 ![](../img/rt-dashboard.gif)
+
+![Architecture](../img/rt-architecture.png)
 
 ### High Level Deployment Steps
 
