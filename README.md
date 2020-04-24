@@ -15,6 +15,7 @@
     - Fetches the email content from query string
     - Sends the email using Send Grid
 
+- (Optional) [Real time Dashboard](https://github.com/jomit/anomaly-detection/tree/master/real-time-dashboard)
 
 ### High Level Deployment Steps
 
