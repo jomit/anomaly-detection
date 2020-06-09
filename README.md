@@ -1,4 +1,4 @@
-# Anomaly Detection Quick Demo
+# Serverless Anomaly Detection using Azure
 
 ![Architecture](img/architecture.png)
 
